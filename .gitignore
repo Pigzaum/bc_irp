@@ -1,0 +1,13 @@
+# Ignore vscode dir
+.vscode/
+*.o
+*.a
+*.sh
+*.lp
+*.bas
+*.out
+*.zip
+*.log
+/build/
+/output/
+.VSCodeCounter/
