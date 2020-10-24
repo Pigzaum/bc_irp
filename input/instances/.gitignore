@@ -2,5 +2,5 @@
 *
 # Except this file and cfg file example
 !.gitignore
-!example.cfg
-!instances
+!abs1n5.dat
+!abs2n5.dat

@@ -1,6 +1,6 @@
-# Inventory-routing problem (IRP) linear program solver.
+# Inventory-routing problem (IRP) linear program solver
 
-A C++ implementation of the IRP linear program using Gurobi's API.
+A C++ implementation of the IRP linear program [1] using Gurobi's API.
 
 ## Prerequisites
 
@@ -35,3 +35,7 @@ $ ./build/bnp_pmpoc -f [configuration file path]
 ```
 
 See the "example.cfg" file at the "input" folder for an example of the input configuration file.
+
+## References
+
+**[\[1\] C. Archetti, L. Bertazzi, G. Laporte and M. G. Speranza. A Branch-and-Cut Algorithm for a Vendor-Managed Inventory-Routing Problem Transportation Science, 41(3), 2007, pp. 382-391.](https://pubsonline.informs.org/doi/10.1287/trsc.1060.0188)**
