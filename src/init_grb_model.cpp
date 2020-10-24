@@ -5,6 +5,8 @@
  *
  * @brief Gurobi's model initialization helper functions definitions.
  *
+ * @acknowledgment Special thanks to Ph.D. Cleder Marcos Schenekemberg.
+ * 
  * (I'm sorry for my bad english xD)
  *
  * Created on October 22, 2020, 10:44 PM.

@@ -6,7 +6,8 @@
  * @author Guilherme O. Chagas (guilherme.o.chagas[a]gmail.com)
  * @date This file was created on October 22, 2020, 05:52 PM
  * @warning I'm sorry for my bad English xD.
- * @acknowledgment Special thanks to Professor Leandro C. Coelho.
+ * @acknowledgment Special thanks to Ph.D. Leandro C. Coelho and Ph.D. Cleder
+ * Marcos Schenekemberg.
  * @copyright GNU General Public License.
  *
  * References:
