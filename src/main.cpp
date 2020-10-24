@@ -65,6 +65,7 @@ int main(int argc, char **argv)
     const std::string path = params.getInstancePath();
     if (std::filesystem::is_directory(path))
     {
+        /* execute in batch */
         for (const auto &f : std::filesystem::directory_iterator(path))
         {
             RAW_LOG_F(INFO, "executing instance: %s", f.path().c_str());
@@ -74,6 +75,7 @@ int main(int argc, char **argv)
     }
     else
     {
+        /* single instance execution */
         RAW_LOG_F(INFO, "executing instance: %s", path.c_str());
         auto pInst = std::make_shared<Instance>(path);
         buildNsolve(pInst, params);

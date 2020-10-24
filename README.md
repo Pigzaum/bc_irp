@@ -1,6 +1,6 @@
 # Inventory-routing problem (IRP) linear program solver
 
-A C++ implementation of the IRP linear program [1] using Gurobi's API.
+A C++ implementation of the IRP linear program [[1](#references)] using Gurobi's API.
 
 ## Prerequisites
 
