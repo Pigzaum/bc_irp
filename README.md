@@ -31,7 +31,7 @@ for the release version.
 To run with a configuration file:
 
 ```sh
-$ ./build/bnp_pmpoc -f [configuration file path]
+$ ./build/irp_solver -f [configuration file path]
 ```
 
 See the "example.cfg" file at the "input" folder for an example of the input configuration file.

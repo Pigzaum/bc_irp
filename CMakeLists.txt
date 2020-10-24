@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_COMPILER g++-10)
 
 # set the project name and version
-project(irp_solver VERSION 0.0.1)
+project(irp_solver VERSION 0.5.0)
 
 option(CXX "enable C++ compilation" ON)
 
