@@ -71,6 +71,7 @@ int main(int argc, char **argv)
             RAW_LOG_F(INFO, "executing instance: %s", f.path().c_str());
             auto pInst = std::make_shared<Instance>(f.path());
             buildNsolve(pInst, params);
+            RAW_LOG_F(INFO, std::string(80, '=').c_str());
         }
     }
     else

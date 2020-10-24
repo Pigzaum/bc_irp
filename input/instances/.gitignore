@@ -1,6 +1,0 @@
-# Ignore everything in this directory
-*
-# Except this file and cfg file example
-!.gitignore
-!abs1n5.dat
-!abs2n5.dat
