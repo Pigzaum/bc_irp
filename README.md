@@ -8,7 +8,7 @@ A C++ implementation of the IRP linear program [[1](#references)] using Gurobi's
 
 * C++17 compiler or an early version.
 
-* GUROBI solver (8 or an early version). Academics can obtain it via this [link](https://www.gurobi.com/downloads/gurobi-optimizer-eula/#Reg "Gurobi's register page").
+* GUROBI solver (9 or an early version). Academics can obtain it via this [link](https://www.gurobi.com/downloads/gurobi-optimizer-eula/#Reg "Gurobi's register page").
 
 ## Compile and run instructions
 

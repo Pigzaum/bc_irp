@@ -1,4 +1,5 @@
 # Ignore vscode dir
+Makefile
 .vscode/
 *.o
 *.a
@@ -9,5 +10,6 @@
 *.zip
 *.log
 /build/
+/bin/
 /output/
 .VSCodeCounter/
