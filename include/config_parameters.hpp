@@ -37,7 +37,9 @@ public:
     struct model
     {
         enum policy_opt {ML, OU};
+        enum sec_opt {STD, CVRPSEP};
         policy_opt policy;
+        sec_opt sec_strategy;
     };
 
     /**

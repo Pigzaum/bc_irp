@@ -37,6 +37,7 @@ void initModel(GRBModel& model,
                std::vector<std::vector<std::vector<GRBVar>>>& x,
                std::vector<std::vector<GRBVar>>& y,
                std::vector<GRBConstr>& constrs,
+               CallbackSEC &CbSEC,
                const std::shared_ptr<const Instance>& pInst,
                const ConfigParameters::model& params)
 {
@@ -79,7 +80,22 @@ void initModel(GRBModel& model,
         init::quantitiesRoutingConstraint(model, constrs, y, q, pInst);
         init::capacityVehicleConstraint(model, constrs, y, q, pInst);
         init::degreeConstrs(model, constrs, y, x, pInst);
-        init::subtourEliminationConstrs(model, constrs, y, x, pInst);
+
+        switch (params.sec_strategy)
+        {
+        case ConfigParameters::model::sec_opt::STD :
+        {
+            init::subtourEliminationConstrs(model, constrs, y, x, pInst);
+            break;
+        }
+        case ConfigParameters::model::sec_opt::CVRPSEP :
+        {
+            RAW_LOG_F(INFO, "\tusing lazy and cut (CVRPSEP package)");
+            model.set(GRB_IntParam_LazyConstraints, 1);
+            model.setCallback(&CbSEC);
+            break;
+        }
+        }
     }
     catch (GRBException e)
     {
@@ -99,9 +115,10 @@ void initModel(GRBModel& model,
 Irp_lp::Irp_lp(const std::shared_ptr<const Instance>& pInst,
                const ConfigParameters::model& params) :
     mpInst(pInst),
-    mModel(mEnv)
+    mModel(mEnv),
+    mCbSEC(m_x, m_y, pInst)
 {
-    initModel(mModel, mI, m_q, m_x, m_y, mConstrs, mpInst, params);
+    initModel(mModel, mI, m_q, m_x, m_y, mConstrs, mCbSEC, mpInst, params);
 }
 
 
@@ -137,7 +154,6 @@ bool Irp_lp::solve(const ConfigParameters::solver& params)
 
     return solved;
 }
-
 
 
 void Irp_lp::writeIis(std::string path)

@@ -27,17 +27,19 @@
 
 #include "config_parameters.hpp"
 #include "instance.hpp"
+#include "callback/callback_sec.hpp"
 
 class Irp_lp
 {
 public:
 
-    Irp_lp() = default;
     Irp_lp(const Irp_lp& other) = default;
     Irp_lp(Irp_lp&& other) = default;
     ~Irp_lp() = default;
-    Irp_lp& operator=(const Irp_lp& other) = default;
-    Irp_lp& operator=(Irp_lp&& other) = default;
+
+    Irp_lp() = delete;
+    Irp_lp& operator=(const Irp_lp& other) = delete;
+    Irp_lp& operator=(Irp_lp&& other) = delete;
 
     Irp_lp(const std::shared_ptr<const Instance>& p_inst,
            const ConfigParameters::model& params);
@@ -69,6 +71,8 @@ private:
     std::vector<std::vector<std::vector<GRBVar>>> m_x;
     // retailer i is served at time t
     std::vector<std::vector<GRBVar>> m_y;
+
+    CallbackSEC mCbSEC;
 };
 
 #endif // IRP_LP_HPP

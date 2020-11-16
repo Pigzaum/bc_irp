@@ -319,7 +319,6 @@ void init::ouQuantityCapacityConstrs(
     {
         for (auto t = 0; t < pInst->getT(); ++t)
         {
-            // GRBLinExpr e = pInst->getUi(i) * y[i][t] - I[i][t];
             std::ostringstream oss;
             oss << "6C_OU" << i << "_" << t;
             constrs.push_back(model.addConstr(q[i][t] >=
@@ -417,6 +416,8 @@ void init::subtourEliminationConstrs(
     const std::vector<std::vector<std::vector<GRBVar>>>& x,
     const std::shared_ptr<const Instance>& pInst)
 {
+    DRAW_LOG_F(INFO, "\tinitializing subtour elimination constraints");
+
     /* subsets */
     int count_subset = 0;
 

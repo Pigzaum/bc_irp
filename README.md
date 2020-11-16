@@ -1,6 +1,6 @@
-# Inventory-routing problem (IRP) linear program solver
+# Inventory-routing problem (IRP) Branch-and-cut using CVRPSEP package
 
-A C++ implementation of the IRP linear program [[1](#references)] using Gurobi's API.
+A C++ implementation of the IRP [[1](#references)] Branch-and-cut using Gurobi's API and CVRPSEP package [[2](#references)].
 
 ## Prerequisites
 
@@ -39,3 +39,5 @@ See the "example.cfg" file at the "input" folder for an example of the input con
 ## References
 
 **[\[1\] C. Archetti, L. Bertazzi, G. Laporte and M. G. Speranza. A Branch-and-Cut Algorithm for a Vendor-Managed Inventory-Routing Problem Transportation Science, 41(3), 2007, pp. 382-391.](https://pubsonline.informs.org/doi/10.1287/trsc.1060.0188)**
+
+**[\[2\] J. Lysgaard, A.N. Letchford and R.W. Eglese. A New Branch-and-Cut Algorithm for the Capacitated Vehicle Routing Problem, Mathematical Programming, vol. 100 (2), pp. 423-445](https://pubsonline.informs.org/doi/10.1287/trsc.1060.0188)**

@@ -36,6 +36,7 @@ const std::string c_solver_show_log = "solver_show_log";
 const std::string c_solver_time_limit = "solver_time_limit";
 const std::string c_solver_nb_threads = "solver_nb_threads";
 const std::string c_model_policy = "model_policy";
+const std::string c_sec_strategy = "sec_strategy";
 
 /**
  * @brief Parse string to boolean.
@@ -66,6 +67,9 @@ std::size_t parseUint(const std::string &str)
     return static_cast<std::size_t>(val);
 }
 
+/**
+ * @brief.
+*/
 ConfigParameters::model::policy_opt parsePolicyOpt(const std::string &str)
 {
     if (std::stoi(str) == 0)
@@ -76,6 +80,22 @@ ConfigParameters::model::policy_opt parsePolicyOpt(const std::string &str)
     {
         CHECK_F(std::stoi(str) == 1);
         return ConfigParameters::model::policy_opt::OU;
+    }
+}
+
+/**
+ * @brief.
+*/
+ConfigParameters::model::sec_opt parseSECOpt(const std::string &str)
+{
+    if (std::stoi(str) == 0)
+    {
+        return ConfigParameters::model::sec_opt::STD;
+    }
+    else
+    {
+        CHECK_F(std::stoi(str) == 1);
+        return ConfigParameters::model::sec_opt::CVRPSEP;
     }
 }
 
@@ -190,4 +210,5 @@ void ConfigParameters::setupParameters()
     mSolverParam.nb_threads = parseUint(mData[c_solver_nb_threads]);
     // ---- Model parameters ----
     mModelParam.policy = parsePolicyOpt(mData[c_model_policy]);
+    mModelParam.sec_strategy = parseSECOpt(mData[c_sec_strategy]);
 }
