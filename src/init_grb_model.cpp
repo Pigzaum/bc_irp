@@ -202,7 +202,7 @@ void init::stockOutDepotConstrs(GRBModel& model,
         }
 
         std::ostringstream oss;
-        oss << "2C" << t;
+        oss << "2C_" << t;
         constrs.push_back(model.addConstr(I[0][t] >= e, oss.str()));
     }
 }

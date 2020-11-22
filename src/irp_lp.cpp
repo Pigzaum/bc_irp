@@ -125,7 +125,7 @@ Irp_lp::Irp_lp(const std::shared_ptr<const Instance>& pInst,
 bool Irp_lp::solve(const ConfigParameters::solver& params)
 {
     RAW_LOG_F(INFO, "Solving IRP LP...\n");
-    bool solved = false;
+    bool solved = true;
 
     try
     {
@@ -133,13 +133,13 @@ bool Irp_lp::solve(const ConfigParameters::solver& params)
         mModel.set(GRB_IntParam_OutputFlag, params.show_log);
         mModel.set(GRB_DoubleParam_TimeLimit, params.time_limit);
         mModel.set(GRB_IntParam_Threads, params.nb_threads);
+        mModel.set(GRB_StringParam_LogFile, params.logFile_);
 
         mModel.optimize();
 
-        if (mModel.get(GRB_IntAttr_Status) == GRB_OPTIMAL ||
-            mModel.get(GRB_IntAttr_Status) == GRB_TIME_LIMIT)
+        if (mModel.get(GRB_IntAttr_Status) == GRB_INFEASIBLE)
         {
-            solved = true;
+            solved = false;
         }
     }
     catch (GRBException& e)

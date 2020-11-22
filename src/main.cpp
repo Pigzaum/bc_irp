@@ -32,12 +32,18 @@ void buildNsolve(const std::shared_ptr<const Instance>& pInst,
     pInst->show();
 
     Irp_lp irpSolver(pInst, params.getModelParams());
-    irpSolver.solve(params.getSolverParams());
+    // irpSolver.writeModel(params.getOutputDir());
+    bool solved = irpSolver.solve(params.getSolverParams());
 
-    irpSolver.writeResultsJSON(params.getOutputDir());
-    irpSolver.writeSolution(params.getOutputDir());
-    irpSolver.writeModel(params.getOutputDir());
-    // irpSolver.writeIis(params.getOutputDir());
+    if (solved)
+    {
+        irpSolver.writeResultsJSON(params.getOutputDir());
+        irpSolver.writeSolution(params.getOutputDir());
+    }
+    else
+    {
+        irpSolver.writeIis(params.getOutputDir());
+    }
 }
 
 
@@ -59,6 +65,7 @@ int main(int argc, char **argv)
         oss << params.getOutputDir() << "execution_" <<
             std::put_time(&tm, "%d_%m_%Y_%H_%M_%S") << ".log";
         loguru::add_file(oss.str().c_str(), Append, Verbosity_MAX);
+        params.setLogFilePath(oss.str());
     }
 
     params.show();

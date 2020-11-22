@@ -184,6 +184,12 @@ ConfigParameters::solver ConfigParameters::getSolverParams() const
 }
 
 
+void ConfigParameters::setLogFilePath(const std::string& path)
+{
+    mSolverParam.logFile_ = path;
+}
+
+
 void ConfigParameters::show() const
 {
     RAW_LOG_F(INFO, std::string(80, '-').c_str());

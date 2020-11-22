@@ -32,6 +32,7 @@ public:
         bool show_log;          // print output parameters
         std::size_t time_limit;  // time limit of the solver
         std::size_t nb_threads; // # of threads used by solver
+        std::string logFile_;
     };
 
     struct model
@@ -81,6 +82,11 @@ public:
      * @brief.
     */
     solver getSolverParams() const;
+
+    /**
+     * @brief.
+    */
+    void setLogFilePath(const std::string& path);
 
     /**
      * @brief Prints instance value.
