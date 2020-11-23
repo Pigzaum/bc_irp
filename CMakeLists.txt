@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.08)
 
 # set the project name and version
-project(irp_solver VERSION 0.5.0)
+project(irp_solver VERSION 0.5.1)
 
 option(CXX "enable C++ compilation" ON)
 
