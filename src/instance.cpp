@@ -22,6 +22,7 @@
 
 #include "../include/ext/loguru/loguru.hpp"
 
+#include "../include/config_parameters.hpp"
 #include "../include/instance.hpp"
 
 /////////////////////////////// Helper methods  ////////////////////////////////
@@ -72,17 +73,25 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Instance::Instance(const std::string& file_path) :
-    mPath(file_path)
+Instance::Instance(const std::string& filePath, const int K) :
+    mPath(filePath),
+    mK(K)
 {
-    CHECK_F(std::filesystem::exists(file_path));
-    init(file_path);
+    CHECK_F(std::filesystem::exists(filePath));
+    init(filePath);
 }
 
 
 double Instance::getC() const
 {
     return mC;
+}
+
+
+double Instance::getCk(const int k) const
+{
+    DCHECK_F(k < static_cast<int>(mCk.size()));
+    return mCk[k];
 }
 
 
@@ -112,6 +121,12 @@ double Instance::getLi(const int i) const
 {
     DCHECK_F(i < static_cast<int>(mLi.size()));
     return mLi[i];
+}
+
+
+int Instance::getK() const
+{
+    return mK;
 }
 
 
@@ -145,6 +160,12 @@ double Instance::getUi(const int i) const
 {
     DCHECK_F(i < static_cast<int>(mUi.size()));
     return mUi[i];
+}
+
+
+void Instance::setK(const int K)
+{
+    mK = K;
 }
 
 
@@ -188,9 +209,9 @@ void Instance::show() const
 
 /////////////////////////////// private methods ////////////////////////////////
 
-void Instance::init(const std::string& file_path)
+void Instance::init(const std::string& filePath)
 {
-    std::ifstream file(file_path);
+    std::ifstream file(filePath);
 
     file >> mNbVertices;
     file >> mT;
@@ -204,6 +225,12 @@ void Instance::init(const std::string& file_path)
     mUi.reserve(mNbVertices);
     mUi.push_back(0);
     mCoord.reserve(mNbVertices);
+
+    mCk.reserve(mK);
+    for (int i = 0; i < mK; ++i)
+    {
+        mCk.push_back(std::round(mC / mK));
+    }
 
     /* first line: depot */
     {

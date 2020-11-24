@@ -35,16 +35,17 @@ public:
     CallbackSEC& operator=(const CallbackSEC& other) = delete;
     CallbackSEC& operator=(CallbackSEC&& other) = delete;
 
-    CallbackSEC(const std::vector<std::vector<std::vector<GRBVar>>>& x,
-                const std::vector<std::vector<GRBVar>>& y,
-                const std::shared_ptr<const Instance>& p_inst);
+    CallbackSEC(
+        const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
+        const std::vector<std::vector<std::vector<GRBVar>>>& y,
+        const std::shared_ptr<const Instance>& p_inst);
 
 private:
 
     // equal to one if j immediately follows i in the route traveled at time t
-    const std::vector<std::vector<std::vector<GRBVar>>>& m_x;
+    const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& m_x;
     // retailer i is served at time t
-    const std::vector<std::vector<GRBVar>>& m_y;
+    const std::vector<std::vector<std::vector<GRBVar>>>& m_y;
 
     std::shared_ptr<const Instance> mp_inst;
 

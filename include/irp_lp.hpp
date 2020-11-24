@@ -65,12 +65,13 @@ private:
 
     // inventory level variables
     std::vector<std::vector<GRBVar>> mI;
-    // product quantity shipped to the retailer
-    std::vector<std::vector<GRBVar>> m_q;
-    // equal to one if j immediately follows i in the route traveled at time t
-    std::vector<std::vector<std::vector<GRBVar>>> m_x;
-    // retailer i is served at time t
-    std::vector<std::vector<GRBVar>> m_y;
+    // product quantity shipped to the retailer by vehicle k
+    std::vector<std::vector<std::vector<GRBVar>>> m_q;
+    /* equal to one if j immediately follows i in the route traveled at time t
+       by vehicle k */
+    std::vector<std::vector<std::vector<std::vector<GRBVar>>>> m_x;
+    // retailer i is served at time t by vehicle k
+    std::vector<std::vector<std::vector<GRBVar>>> m_y;
 
     CallbackSEC mCbSEC;
 };

@@ -77,7 +77,8 @@ int main(int argc, char **argv)
         for (const auto &f : std::filesystem::directory_iterator(path))
         {
             RAW_LOG_F(INFO, "executing instance: %s", f.path().c_str());
-            auto pInst = std::make_shared<Instance>(f.path());
+            auto pInst = std::make_shared<Instance>(f.path(),
+                                                    params.getModelParams().K_);
             buildNsolve(pInst, params);
             RAW_LOG_F(INFO, std::string(80, '=').c_str());
         }
@@ -86,7 +87,8 @@ int main(int argc, char **argv)
     {
         /* single instance execution */
         RAW_LOG_F(INFO, "executing instance: %s", path.c_str());
-        auto pInst = std::make_shared<Instance>(path);
+        auto pInst = std::make_shared<Instance>(path,
+                                                params.getModelParams().K_);
         buildNsolve(pInst, params);
     }
 

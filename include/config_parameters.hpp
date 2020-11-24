@@ -39,6 +39,8 @@ public:
     {
         enum policy_opt {ML, OU};
         enum sec_opt {STD, CVRPSEP};
+
+        int K_;
         policy_opt policy;
         sec_opt sec_strategy;
     };

@@ -42,7 +42,7 @@ void inventoryLevelVariables(GRBModel& model,
  * @param:.
 */
 void quantityVariables(GRBModel& model,
-                       std::vector<std::vector<GRBVar>>& q,
+                       std::vector<std::vector<std::vector<GRBVar>>>& q,
                        const std::shared_ptr<const Instance>& pInst);
 
 
@@ -53,7 +53,7 @@ void quantityVariables(GRBModel& model,
  * @param:.
 */
 void visitationVariables(GRBModel& model,
-                         std::vector<std::vector<GRBVar>>& y,
+                         std::vector<std::vector<std::vector<GRBVar>>>& y,
                          const std::shared_ptr<const Instance>& pInst);
 
 /**
@@ -62,9 +62,10 @@ void visitationVariables(GRBModel& model,
  * @param:.
  * @param:.
 */
-void routingVariables(GRBModel& model,
-                      std::vector<std::vector<std::vector<GRBVar>>>& x,
-                      const std::shared_ptr<const Instance>& pInst);
+void routingVariables(
+    GRBModel& model,
+    std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -74,11 +75,12 @@ void routingVariables(GRBModel& model,
  * @param:.
  * @param:.
 */
-void inventoryDefDepotConstrs(GRBModel& model,
-                              std::vector<GRBConstr>& constrs,
-                              const std::vector<std::vector<GRBVar>>& I,
-                              const std::vector<std::vector<GRBVar>>& q,
-                              const std::shared_ptr<const Instance>& pInst);
+void inventoryDefDepotConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -88,11 +90,12 @@ void inventoryDefDepotConstrs(GRBModel& model,
  * @param:.
  * @param:.
 */
-void stockOutDepotConstrs(GRBModel& model,
-                          std::vector<GRBConstr>& constrs,
-                          const std::vector<std::vector<GRBVar>>& I,
-                          const std::vector<std::vector<GRBVar>>& q,
-                          const std::shared_ptr<const Instance>& pInst);
+void stockOutDepotConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -102,11 +105,12 @@ void stockOutDepotConstrs(GRBModel& model,
  * @param:.
  * @param:.
 */
-void inventoryDefCustomersConstrs(GRBModel& model,
-                                  std::vector<GRBConstr>& constrs,
-                                  const std::vector<std::vector<GRBVar>>& I,
-                                  const std::vector<std::vector<GRBVar>>& q,
-                                  const std::shared_ptr<const Instance>& pInst);
+void inventoryDefCustomersConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -118,7 +122,7 @@ void inventoryDefCustomersConstrs(GRBModel& model,
 */
 void capacityConstrs(GRBModel& model,
                      std::vector<GRBConstr>& constrs,
-                     const std::vector<std::vector<GRBVar>>& q,
+                     const std::vector<std::vector<std::vector<GRBVar>>>& q,
                      const std::shared_ptr<const Instance>& pInst);
 
 /**
@@ -129,11 +133,12 @@ void capacityConstrs(GRBModel& model,
  * @param:.
  * @param:.
 */
-void inventoryLevelConstrs(GRBModel& model,
-                           std::vector<GRBConstr>& constrs,
-                           const std::vector<std::vector<GRBVar>>& I,
-                           const std::vector<std::vector<GRBVar>>& q,
-                           const std::shared_ptr<const Instance>& pInst);
+void inventoryLevelConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -143,11 +148,12 @@ void inventoryLevelConstrs(GRBModel& model,
  * @param:.
  * @param:.
 */
-void mlQuantityCapacityConstrs(GRBModel& model,
-                               std::vector<GRBConstr>& constrs,
-                               const std::vector<std::vector<GRBVar>>& I,
-                               const std::vector<std::vector<GRBVar>>& q,
-                               const std::shared_ptr<const Instance>& pInst);
+void mlQuantityCapacityConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -157,12 +163,13 @@ void mlQuantityCapacityConstrs(GRBModel& model,
  * @param:.
  * @param:.
 */
-void ouQuantityCapacityConstrs(GRBModel& model,
-                               std::vector<GRBConstr>& constrs,
-                               const std::vector<std::vector<GRBVar>>& I,
-                               const std::vector<std::vector<GRBVar>>& y,
-                               const std::vector<std::vector<GRBVar>>& q,
-                               const std::shared_ptr<const Instance>& pInst);
+void ouQuantityCapacityConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -172,11 +179,12 @@ void ouQuantityCapacityConstrs(GRBModel& model,
  * @param:.
  * @param:.
 */
-void quantitiesRoutingConstraint(GRBModel& model,
-                                 std::vector<GRBConstr>& constrs,
-                                 const std::vector<std::vector<GRBVar>>& y,
-                                 const std::vector<std::vector<GRBVar>>& q,
-                                 const std::shared_ptr<const Instance>& pInst);
+void quantitiesRoutingConstraint(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -186,11 +194,12 @@ void quantitiesRoutingConstraint(GRBModel& model,
  * @param:.
  * @param:.
 */
-void capacityVehicleConstraint(GRBModel& model,
-                               std::vector<GRBConstr>& constrs,
-                               const std::vector<std::vector<GRBVar>>& y,
-                               const std::vector<std::vector<GRBVar>>& q,
-                               const std::shared_ptr<const Instance>& pInst);
+void capacityVehicleConstraint(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst);
 
 /**
  * @brief:.
@@ -200,11 +209,12 @@ void capacityVehicleConstraint(GRBModel& model,
  * @param:.
  * @param:.
 */
-void degreeConstrs(GRBModel& model,
-                   std::vector<GRBConstr>& constrs,
-                   const std::vector<std::vector<GRBVar>>& y,
-                   const std::vector<std::vector<std::vector<GRBVar>>>& x,
-                   const std::shared_ptr<const Instance>& pInst);
+void degreeConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
+    const std::shared_ptr<const Instance>& pInst);
 
 
 /**

@@ -82,7 +82,7 @@ void init::inventoryLevelVariables(
 }
 
 void init::quantityVariables(GRBModel& model,
-                             std::vector<std::vector<GRBVar>>& q,
+                             std::vector<std::vector<std::vector<GRBVar>>>& q,
                              const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing quantity delivered variables (q_it)");
@@ -90,26 +90,32 @@ void init::quantityVariables(GRBModel& model,
     q.reserve(pInst->getNbVertices());
     for (auto i = 0; i < pInst->getNbVertices(); ++i)
     {
-        q.push_back(std::vector<GRBVar>(pInst->getT() + 1));
+        q.push_back(std::vector<std::vector<GRBVar>>());
+        q[i].reserve(pInst->getK());
 
-        if (i == 0) continue;
-
-        for (auto t = 0; t < pInst->getT(); ++t)
+        for (auto k = 0; k < pInst->getK(); ++k)
         {
-            std::ostringstream oss;
-            oss << "q_" << i << "_" << t;
-            q[i][t] = model.addVar(0,
-                                   GRB_INFINITY,
-                                   0,
-                                   GRB_CONTINUOUS,
-                                   oss.str());
+            q[i].push_back(std::vector<GRBVar>(pInst->getT() + 1));
+
+            if (i == 0) continue;
+
+            for (auto t = 0; t < pInst->getT(); ++t)
+            {
+                std::ostringstream oss;
+                oss << "q_" << i << "_" << k << "_" << t;
+                q[i][k][t] = model.addVar(0,
+                                    GRB_INFINITY,
+                                    0,
+                                    GRB_CONTINUOUS,
+                                    oss.str());
+            }
         }
     }
 }
 
 
 void init::visitationVariables(GRBModel& model,
-                               std::vector<std::vector<GRBVar>>& y,
+                               std::vector<std::vector<std::vector<GRBVar>>>& y,
                                const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing visitation variables (y_it)");
@@ -117,54 +123,66 @@ void init::visitationVariables(GRBModel& model,
     y.reserve(pInst->getNbVertices());
     for (auto i = 0; i < pInst->getNbVertices(); ++i)
     {
-        y.push_back(std::vector<GRBVar>(pInst->getT() + 1));
-        for (auto t = 0; t < pInst->getT(); ++t)
+        y.push_back(std::vector<std::vector<GRBVar>>());
+        y[i].reserve(pInst->getK());
+        for (auto k = 0; k < pInst->getK(); ++k)
         {
-            std::ostringstream oss;
-            oss << "y_" << i << "_" << t;
-            y[i][t] = model.addVar(0, 1, 0, GRB_BINARY, oss.str());
-        }
-    }
-}
-
-
-void init::routingVariables(GRBModel& model,
-                            std::vector<std::vector<std::vector<GRBVar>>>& x,
-                            const std::shared_ptr<const Instance>& pInst)
-{
-    DRAW_LOG_F(INFO, "\tinitializing routing variables (x_ijt)");
-
-    x.reserve(pInst->getNbVertices());
-    for (auto i = 0; i < pInst->getNbVertices(); ++i)
-    {
-        x.push_back(std::vector<std::vector<GRBVar>>());
-        x[i].reserve(pInst->getNbVertices());
-        for (auto j = 0; j < pInst->getNbVertices(); ++j)
-        {
-            x[i].push_back(std::vector<GRBVar>(pInst->getT() + 1));
-
-            if (j <= i) continue;
-
+            y[i].push_back(std::vector<GRBVar>(pInst->getT() + 1));
             for (auto t = 0; t < pInst->getT(); ++t)
             {
                 std::ostringstream oss;
-                oss << "x_" << i << "_" << j << "_" << t;
-                x[i][j][t] = model.addVar(0,
-                                          (i == 0 ? 2 : 1),
-                                          pInst->get_cij(i, j),
-                                          GRB_INTEGER,
-                                          oss.str());
+                oss << "y_" << i << "_" << k << "_" << t;
+                y[i][k][t] = model.addVar(0, 1, 0, GRB_BINARY, oss.str());
             }
         }
     }
 }
 
 
+void init::routingVariables(
+    GRBModel& model,
+    std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
+    const std::shared_ptr<const Instance>& pInst)
+{
+    DRAW_LOG_F(INFO, "\tinitializing routing variables (x_ijt)");
+
+    x.reserve(pInst->getNbVertices());
+    for (auto i = 0; i < pInst->getNbVertices(); ++i)
+    {
+        x.push_back(std::vector<std::vector<std::vector<GRBVar>>>());
+        x[i].reserve(pInst->getNbVertices());
+        for (auto j = 0; j < pInst->getNbVertices(); ++j)
+        {
+            x[i].push_back(std::vector<std::vector<GRBVar>>());
+            x[i][j].reserve(pInst->getK());
+
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                x[i][j].push_back(std::vector<GRBVar>(pInst->getT() + 1));
+                if (j <= i) continue;
+
+                for (auto t = 0; t < pInst->getT(); ++t)
+                {
+                    std::ostringstream oss;
+                    oss << "x_" << i << "_" << j << "_" << k << "_" << t;
+                    x[i][j][k][t] = model.addVar(0,
+                                                 (i == 0 ? 2 : 1),
+                                                 pInst->get_cij(i, j),
+                                                 GRB_INTEGER,
+                                                 oss.str());
+                }
+            }
+        }
+    }
+}
+
+
+// ok
 void init::inventoryDefDepotConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
     const std::vector<std::vector<GRBVar>>& I,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing inventory definition depot constraints");
@@ -175,7 +193,10 @@ void init::inventoryDefDepotConstrs(
         GRBLinExpr e = I[0][t - 1] + pInst->get_rit(0, t - 1);
         for (auto i = 1; i < pInst->getNbVertices(); ++i) // skip depot
         {
-            e -= q[i][t - 1];
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                e -= q[i][k][t - 1];
+            }
         }
 
         std::ostringstream oss;
@@ -185,11 +206,13 @@ void init::inventoryDefDepotConstrs(
 }
 
 
-void init::stockOutDepotConstrs(GRBModel& model,
-                                std::vector<GRBConstr>& constrs,
-                                const std::vector<std::vector<GRBVar>>& I,
-                                const std::vector<std::vector<GRBVar>>& q,
-                                const std::shared_ptr<const Instance>& pInst)
+// ok
+void init::stockOutDepotConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<GRBVar>>& I,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing stockout depot contraints");
 
@@ -198,7 +221,10 @@ void init::stockOutDepotConstrs(GRBModel& model,
         GRBLinExpr e = 0;
         for (int i = 1; i < pInst->getNbVertices(); i++)
         {
-            e += q[i][t];
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                e += q[i][k][t];
+            }
         }
 
         std::ostringstream oss;
@@ -208,11 +234,12 @@ void init::stockOutDepotConstrs(GRBModel& model,
 }
 
 
+// ok
 void init::inventoryDefCustomersConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
     const std::vector<std::vector<GRBVar>>& I,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing inventory definition customers contraints");
@@ -226,7 +253,14 @@ void init::inventoryDefCustomersConstrs(
 
         for (auto t = 1; t <= pInst->getT(); ++t)
         {
-            GRBLinExpr e = I[i][t - 1] + q[i][t - 1] - pInst->get_rit(i, t - 1);
+            GRBLinExpr e = 0;
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                e += q[i][k][t - 1];
+            }
+
+            e += I[i][t - 1] - pInst->get_rit(i, t - 1);
+
             oss.clear();
             oss.str("");
             oss << "3C_" << i << "_" << t;
@@ -236,10 +270,12 @@ void init::inventoryDefCustomersConstrs(
 }
 
 
-void init::capacityConstrs(GRBModel& model,
-                           std::vector<GRBConstr>& constrs,
-                           const std::vector<std::vector<GRBVar>>& q,
-                           const std::shared_ptr<const Instance>& pInst)
+// ok
+void init::capacityConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
+    const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing capacity contraints");
 
@@ -248,7 +284,10 @@ void init::capacityConstrs(GRBModel& model,
         GRBLinExpr e = 0;
         for (auto i = 1; i < pInst->getNbVertices(); ++i)
         {
-            e += q[i][t];
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                e += q[i][k][t];
+            }
         }
 
         std::ostringstream oss;
@@ -258,11 +297,12 @@ void init::capacityConstrs(GRBModel& model,
 }
 
 
+// ok
 void init::inventoryLevelConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
     const std::vector<std::vector<GRBVar>>& I,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing inventory level constraints");
@@ -272,7 +312,10 @@ void init::inventoryLevelConstrs(
         GRBLinExpr e = 0;
         for (int i = 1; i < pInst->getNbVertices(); ++i)
         {
-            e += q[i][t];
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                e += q[i][k][t];
+            }
         }
 
         std::ostringstream oss;
@@ -282,11 +325,12 @@ void init::inventoryLevelConstrs(
 }
 
 
+// ok
 void init::mlQuantityCapacityConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
     const std::vector<std::vector<GRBVar>>& I,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tML quantity capacity constraints");
@@ -295,22 +339,28 @@ void init::mlQuantityCapacityConstrs(
     {
         for (auto t = 0; t < pInst->getT(); ++t)
         {
+            GRBLinExpr e = 0;
+            for (auto k = 0; k < pInst->getK(); ++k)
+            {
+                e += q[i][k][t];
+            }
+
             std::ostringstream oss;
             oss << "6C_ML" << i << "_" << t;
             constrs.push_back(
-                model.addConstr(q[i][t] <= pInst->getUi(i) - I[i][t],
-                oss.str()));
+                model.addConstr(e <= pInst->getUi(i) - I[i][t], oss.str()));
         }
     }
 }
 
 
+// ok
 void init::ouQuantityCapacityConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
     const std::vector<std::vector<GRBVar>>& I,
-    const std::vector<std::vector<GRBVar>>& y,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tOU quantity capacity constraints");
@@ -319,91 +369,111 @@ void init::ouQuantityCapacityConstrs(
     {
         for (auto t = 0; t < pInst->getT(); ++t)
         {
+            GRBLinExpr e1 = 0;
+            GRBLinExpr e2 = 0;
+            for (int k = 0; k < pInst->getK(); ++k)
+            {
+                e1 += q[i][k][t];
+                e2 += y[i][k][t];
+            }
+
             std::ostringstream oss;
             oss << "6C_OU" << i << "_" << t;
-            constrs.push_back(model.addConstr(q[i][t] >=
-                              pInst->getUi(i) * y[i][t] - I[i][t], oss.str()));
+            constrs.push_back(model.addConstr(e1 >=
+                pInst->getUi(i) * e2 - I[i][t], oss.str()));
         }
     }
 }
 
 
+// ok
 void init::quantitiesRoutingConstraint(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
-    const std::vector<std::vector<GRBVar>>& y,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing quantities routing constraints");
 
     for (auto i = 1; i < pInst->getNbVertices(); ++i)
     {
-        for (auto t = 0; t < pInst->getT(); ++t)
+        for (int k = 0; k < pInst->getK(); ++k)
         {
-            std::ostringstream oss;
-            oss << "7C" << i << "_" << t;
-            constrs.push_back(
-                model.addConstr(q[i][t] <= pInst->getUi(i) * y[i][t],
-                oss.str()));
+            for (auto t = 0; t < pInst->getT(); ++t)
+            {
+                std::ostringstream oss;
+                oss << "7C" << i << "_" << k << "_" << t;
+                constrs.push_back(model.addConstr(q[i][k][t] <=
+                                pInst->getUi(i) * y[i][k][t], oss.str()));
+            }
         }
     }
 }
 
 
+// ok
 void init::capacityVehicleConstraint(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
-    const std::vector<std::vector<GRBVar>>& y,
-    const std::vector<std::vector<GRBVar>>& q,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<GRBVar>>>& q,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing capacity vehicles constraints");
 
-    for (auto t = 0; t < pInst->getT(); ++t)
+    for (int k = 0; k < pInst->getK(); ++k)
     {
-        GRBLinExpr e = 0;
-        for (auto i = 1; i < pInst->getNbVertices(); ++i)
+        for (auto t = 0; t < pInst->getT(); ++t)
         {
-            e += q[i][t];
-        }
+            GRBLinExpr e = 0;
+            for (auto i = 1; i < pInst->getNbVertices(); ++i)
+            {
+                e += q[i][k][t];
+            }
 
-        std::ostringstream oss;
-        oss << "8C_" << t;
-        constrs.push_back(
-            model.addConstr(e <= pInst->getC() * y[0][t], oss.str()));
+            std::ostringstream oss;
+            oss << "8C_" << k << "_" << t;
+            constrs.push_back(
+                model.addConstr(e <= pInst->getCk(k) * y[0][k][t], oss.str()));
+        }
     }
 }
 
 
-void init::degreeConstrs(GRBModel& model,
-                         std::vector<GRBConstr>& constrs,
-                         const std::vector<std::vector<GRBVar>>& y,
-                         const std::vector<std::vector<std::vector<GRBVar>>>& x,
-                         const std::shared_ptr<const Instance>& pInst)
+// ok
+void init::degreeConstrs(
+    GRBModel& model,
+    std::vector<GRBConstr>& constrs,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
+    const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing degree constraints");
 
-    for (auto t = 0; t < pInst->getT(); ++t)
+    for (auto k = 0; k < pInst->getK(); ++k)
     {
-        for (auto i = 0; i < pInst->getNbVertices(); ++i)
+        for (auto t = 0; t < pInst->getT(); ++t)
         {
-            GRBLinExpr e1 = 0;
-            for (auto j = i + 1; j < pInst->getNbVertices(); ++j)
+            for (auto i = 0; i < pInst->getNbVertices(); ++i)
             {
-                e1 += x[i][j][t];
-            }
+                GRBLinExpr e1 = 0;
+                for (auto j = i + 1; j < pInst->getNbVertices(); ++j)
+                {
+                    e1 += x[i][j][k][t];
+                }
 
-            GRBLinExpr e2 = 0;
-            for (auto j = 0; j < i; ++j)
-            {
-                e2 += x[j][i][t];
-            }
+                GRBLinExpr e2 = 0;
+                for (auto j = 0; j < i; ++j)
+                {
+                    e2 += x[j][i][k][t];
+                }
 
-            std::ostringstream oss;
-            oss << "9C_" << i << "_" << t;
-            constrs.push_back(
-                model.addConstr(e1 + e2 == 2 * y[i][t], oss.str()));
+                std::ostringstream oss;
+                oss << "9C_" << i << "_" << k << "_" << t;
+                constrs.push_back(
+                    model.addConstr(e1 + e2 == 2 * y[i][k][t], oss.str()));
+            }
         }
     }
 }

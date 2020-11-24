@@ -33,9 +33,9 @@ namespace
 
 void initModel(GRBModel& model,
                std::vector<std::vector<GRBVar>>& I,
-               std::vector<std::vector<GRBVar>>& q,
-               std::vector<std::vector<std::vector<GRBVar>>>& x,
-               std::vector<std::vector<GRBVar>>& y,
+               std::vector<std::vector<std::vector<GRBVar>>>& q,
+               std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
+               std::vector<std::vector<std::vector<GRBVar>>>& y,
                std::vector<GRBConstr>& constrs,
                CallbackSEC &CbSEC,
                const std::shared_ptr<const Instance>& pInst,
@@ -85,7 +85,7 @@ void initModel(GRBModel& model,
         {
         case ConfigParameters::model::sec_opt::STD :
         {
-            init::subtourEliminationConstrs(model, constrs, y, x, pInst);
+            // init::subtourEliminationConstrs(model, constrs, y, x, pInst);
             break;
         }
         case ConfigParameters::model::sec_opt::CVRPSEP :

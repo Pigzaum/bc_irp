@@ -13,7 +13,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif(NOT CMAKE_BUILD_TYPE)
 
-
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 include_directories(${PROJECT_SOURCE_DIR}/headers)

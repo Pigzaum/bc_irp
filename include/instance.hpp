@@ -20,6 +20,8 @@
 #include <string>
 #include <vector>
 
+class ConfigParameters;
+
 class Instance
 {
 public:
@@ -39,15 +41,19 @@ public:
      * @brief Constructs from a instance file.
      * @param : const std::string&: instance file path.
     */
-    Instance(const std::string& file_path);
+    Instance(const std::string& filePath, const int K);
 
     double getC() const;
+
+    double getCk(const int k) const;
 
     double get_cij(const int i, const int j) const;
 
     double get_hi(const int i) const;
 
     double getIi0(const int i) const;
+
+    int getK() const; // number of vehicles
 
     double getLi(const int i) const;
 
@@ -60,6 +66,8 @@ public:
     int getT() const;
 
     double getUi(const int i) const;
+
+    void setK(const int K);
 
     /**
      * @brief: Print instance on console.
@@ -74,11 +82,17 @@ private:
     // number of vertices (depot and customers)
     int mNbVertices; 
 
+    // number of vehicles
+    int mK;
+
     // number of discrete time instants of the planning time horizon
     int mT;
 
     // transportation capacity
-    int mC;
+    double mC;
+
+    // transportation capacity of vehicle k
+    std::vector<int> mCk;
 
     // unit inventory cost
     std::vector<double> m_hi;
@@ -105,7 +119,7 @@ private:
      * @brief Initializes the instance object from the instance file path.
      * @param:.
     */
-    void init(const std::string& file_path);
+    void init(const std::string& filePath);
 };
 
 #endif // INSTANCE_HPP

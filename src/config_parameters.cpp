@@ -35,6 +35,7 @@ const std::string c_output_dir = "output_dir";
 const std::string c_solver_show_log = "solver_show_log";
 const std::string c_solver_time_limit = "solver_time_limit";
 const std::string c_solver_nb_threads = "solver_nb_threads";
+const std::string c_nb_vehicles = "nb_vehicles";
 const std::string c_model_policy = "model_policy";
 const std::string c_sec_strategy = "sec_strategy";
 
@@ -43,9 +44,21 @@ const std::string c_sec_strategy = "sec_strategy";
  * @param: const std::string &: string to be parsed.
  * @return: bool: parsed value.
  */
-bool parseBool(const std::string &str)
+bool parseBool(const std::string& str)
 {
     return str.compare("true") == 0;
+}
+
+/**
+ * @brief:.
+ * @param:.
+ * @return:.
+*/
+std::size_t parseUint(const std::string& str)
+{
+    int val = std::stoi(str);
+    CHECK_F(val >= 0, "Input parameter: Invalid value");
+    return static_cast<std::size_t>(val);
 }
 
 /**
@@ -54,7 +67,7 @@ bool parseBool(const std::string &str)
  * @param: const std::string &: string to be parsed.
  * @return: std::size_t: parsed value.
 */
-std::size_t parseUint(const std::string &str)
+std::size_t parseNbThreads(const std::string& str)
 {
     if (str == "max")
     {
@@ -213,8 +226,9 @@ void ConfigParameters::setupParameters()
     // ---- Solver parameters ----
     mSolverParam.show_log = parseBool(mData[c_solver_show_log]);
     mSolverParam.time_limit = parseUint(mData[c_solver_time_limit]);
-    mSolverParam.nb_threads = parseUint(mData[c_solver_nb_threads]);
+    mSolverParam.nb_threads = parseNbThreads(mData[c_solver_nb_threads]);
     // ---- Model parameters ----
+    mModelParam.K_ = parseUint(mData[c_nb_vehicles]);
     mModelParam.policy = parsePolicyOpt(mData[c_model_policy]);
     mModelParam.sec_strategy = parseSECOpt(mData[c_sec_strategy]);
 }
