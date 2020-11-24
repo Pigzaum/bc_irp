@@ -31,7 +31,7 @@ namespace
 std::vector<int> findSetS(const int idx, const int nbVertices)
 {
     const int MAX_N = 30;
-    CHECK_F(nbVertices <= MAX_N);
+    CHECK_F(nbVertices < MAX_N, "You shouldn't use SEC with |V| > 30");
 
     std::vector<int> inS;
     inS.reserve(nbVertices);
