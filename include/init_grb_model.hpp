@@ -228,8 +228,8 @@ void degreeConstrs(
 void subtourEliminationConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
-    const std::vector<std::vector<GRBVar>>& y,
-    const std::vector<std::vector<std::vector<GRBVar>>>& x,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
     const std::shared_ptr<const Instance>& pInst);
 
 } // init namespace

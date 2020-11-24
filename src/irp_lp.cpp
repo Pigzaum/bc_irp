@@ -85,7 +85,7 @@ void initModel(GRBModel& model,
         {
         case ConfigParameters::model::sec_opt::STD :
         {
-            // init::subtourEliminationConstrs(model, constrs, y, x, pInst);
+            init::subtourEliminationConstrs(model, constrs, y, x, pInst);
             break;
         }
         case ConfigParameters::model::sec_opt::CVRPSEP :
@@ -124,7 +124,7 @@ Irp_lp::Irp_lp(const std::shared_ptr<const Instance>& pInst,
 
 bool Irp_lp::solve(const ConfigParameters::solver& params)
 {
-    RAW_LOG_F(INFO, "Solving IRP LP...\n");
+    RAW_LOG_F(INFO, "Solving IRP LP...\n%s", std::string(80, '-').c_str());
     bool solved = true;
 
     try

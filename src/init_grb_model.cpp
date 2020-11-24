@@ -15,6 +15,7 @@
  */
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <bitset>
 #include <cmath>
 #include <sstream>
 
@@ -22,35 +23,29 @@
 
 #include "../include/init_grb_model.hpp"
 
+/////////////////////////////// Helper functions ///////////////////////////////
 
 namespace
 {
 
-void GetSubsetsSubtour(int i,
-                       int num_vertex,
-                       int &count_subset,
-                       std::vector<int>& Set,
-                       std::vector<std::vector<int>>& S)
+std::vector<int> findSetS(const int idx, const int nbVertices)
 {
-    /* subsets elimination subtour S \in V (S != {}) */
+    const int MAX_N = 30;
+    CHECK_F(nbVertices <= MAX_N);
 
-    if (i > num_vertex)
+    std::vector<int> inS;
+    inS.reserve(nbVertices);
+
+    std::bitset<MAX_N> myBitset(idx);
+    for (int i = 1; i < nbVertices; ++i)
     {
-        for (int j = 1; j <= num_vertex; j++)
+        if (myBitset[i - 1])
         {
-            if (Set[j] == 1)
-            {
-                S[count_subset].push_back(j);
-            }
+            inS.push_back(i);
         }
-        count_subset++;
-    }else
-    {
-        Set[i] = 1;
-        GetSubsetsSubtour(i + 1, num_vertex, count_subset, Set, S);
-        Set[i] = 0;
-        GetSubsetsSubtour(i + 1, num_vertex, count_subset, Set, S);
     }
+
+    return inS;
 }
 
 } // anonymous namespace
@@ -482,57 +477,46 @@ void init::degreeConstrs(
 void init::subtourEliminationConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
-    const std::vector<std::vector<GRBVar>>& y,
-    const std::vector<std::vector<std::vector<GRBVar>>>& x,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
     const std::shared_ptr<const Instance>& pInst)
 {
     DRAW_LOG_F(INFO, "\tinitializing subtour elimination constraints");
 
-    /* subsets */
-    int count_subset = 0;
-
-    std::vector<int> Set(pInst->getNbVertices());
-    int number_of_subsets = std::pow(2, pInst->getNbVertices() - 1) - 1;
-
-    /* V' = {1, ..., num_vertex}. S contains the subsets of V (S != {}) */
-    std::vector<std::vector<int>> S(number_of_subsets);
-    GetSubsetsSubtour(1, pInst->getNbVertices() - 1, count_subset, Set, S);
-
-    /* for each subset */
-    for (int subset = 0; subset < number_of_subsets; subset++)
+    const auto nbSets = std::pow(2, pInst->getNbVertices() - 1);
+    for (int c = 1; c < nbSets; ++c)
     {
-        if (static_cast<int>(S[subset].size()) > 1)
+        auto S = findSetS(c, pInst->getNbVertices());
+        if (S.size() > 1)
         {
-            for (auto t = 0; t < pInst->getT(); ++t)
+            for (int k = 0; k < pInst->getK(); ++k)
             {
-                for (size_t m = 0; m < S[subset].size(); m++)
+                for (auto t = 0; t < pInst->getT(); ++t)
                 {
-                    GRBLinExpr lhs = 0;
-                    GRBLinExpr rhs = 0;
-
-                    /* left expression */
-                    for (size_t i = 0; i < S[subset].size(); i++)
+                    for (auto m : S)
                     {
-                        for (size_t j = 0; j < S[subset].size(); j++)
+                        GRBLinExpr lhs = 0;
+                        GRBLinExpr rhs = 0;
+                        for (auto i : S)
                         {
-                            if (S[subset][i] < S[subset][j])
+                            for (auto j : S)
                             {
-                                lhs += x[S[subset][i]][S[subset][j]][t];
+                                if (i < j)
+                                {
+                                    lhs += x[i][j][k][t];
+                                }
                             }
+                            rhs += y[i][k][t];
                         }
-                    }
 
-                    /* right expression */
-                    for (size_t i = 0; i < S[subset].size(); i++)
-                    {
-                        rhs += y[S[subset][i]][t];
-                    }
+                        rhs -= y[m][k][t];
 
-                    std::ostringstream oss;
-                    oss << "10C" << subset+1 << "_" << t << "_" << S[subset][m];
-                    rhs -= y[S[subset][m]][t];
-                    constrs.push_back(model.addConstr(lhs <= rhs, oss.str()));
-                }
+                        std::ostringstream oss;
+                        oss << "5CB_" << c << "_" << k << "_" << t << "_" << m;
+                        constrs.push_back(model.addConstr(lhs <= rhs,
+                                          oss.str()));
+                    }
+                } 
             }
         }
     }

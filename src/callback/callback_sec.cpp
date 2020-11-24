@@ -27,7 +27,7 @@
 namespace
 {
 
-static const int C_EPS = 1e-4;
+static const int C_EPS = 1e-5;
 
 } // anonymous namespace
 
