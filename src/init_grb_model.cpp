@@ -266,33 +266,6 @@ void init::inventoryDefCustomersConstrs(
 
 
 // ok
-void init::capacityConstrs(
-    GRBModel& model,
-    std::vector<GRBConstr>& constrs,
-    const std::vector<std::vector<std::vector<GRBVar>>>& q,
-    const std::shared_ptr<const Instance>& pInst)
-{
-    DRAW_LOG_F(INFO, "\tinitializing capacity contraints");
-
-    for (auto t = 0; t < pInst->getT(); ++t)
-    {
-        GRBLinExpr e = 0;
-        for (auto i = 1; i < pInst->getNbVertices(); ++i)
-        {
-            for (auto k = 0; k < pInst->getK(); ++k)
-            {
-                e += q[i][k][t];
-            }
-        }
-
-        std::ostringstream oss;
-        oss << "4C_" << t;
-        constrs.push_back(model.addConstr(e <= pInst->getC(), oss.str()));
-    }
-}
-
-
-// ok
 void init::inventoryLevelConstrs(
     GRBModel& model,
     std::vector<GRBConstr>& constrs,
