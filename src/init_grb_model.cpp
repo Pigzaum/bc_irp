@@ -494,3 +494,28 @@ void init::subtourEliminationConstrs(
         }
     }
 }
+
+
+void init::noSplitDelivery(
+    GRBModel& model,
+    const std::vector<std::vector<std::vector<GRBVar>>>& y,
+    const std::shared_ptr<const Instance>& pInst)
+{
+    DRAW_LOG_F(INFO, "\tinitializing no split delivery constraints");
+
+    for (int t = 0; t < pInst->getT(); ++t)
+    {
+        for (int i = 1; i < pInst->getNbVertices(); ++i)
+        {
+            GRBLinExpr e = 0;
+            for (int k = 0; k < pInst->getK(); ++k)
+            {
+                e += y[i][k][t];
+            }
+
+            std::ostringstream oss;
+            oss << "10C_" << t << "_" << i;
+            model.addConstr(e <= 1, oss.str());
+        }
+    }
+}

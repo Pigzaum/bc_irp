@@ -55,6 +55,10 @@ void initModel(GRBModel& model,
         init::inventoryDefDepotConstrs(model, constrs, I, q, pInst);
         init::inventoryDefCustomersConstrs(model, constrs, I, q, pInst);
         init::inventoryLevelConstrs(model, constrs, I, q, pInst);
+        init::quantitiesRoutingConstraint(model, constrs, y, q, pInst);
+        init::capacityVehicleConstraint(model, constrs, y, q, pInst);
+        init::degreeConstrs(model, constrs, y, x, pInst);
+        init::noSplitDelivery(model, y, pInst);
 
         /* define which policy should be use */
         switch (params.policy)
@@ -76,10 +80,6 @@ void initModel(GRBModel& model,
             break;
         }
         }
-
-        init::quantitiesRoutingConstraint(model, constrs, y, q, pInst);
-        init::capacityVehicleConstraint(model, constrs, y, q, pInst);
-        init::degreeConstrs(model, constrs, y, x, pInst);
 
         switch (params.sec_strategy)
         {

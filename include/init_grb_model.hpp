@@ -232,6 +232,16 @@ void subtourEliminationConstrs(
     const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
     const std::shared_ptr<const Instance>& pInst);
 
+/**
+ * @brief:.
+ * @param:.
+ * @param:.
+ * @param:.
+*/
+void noSplitDelivery(GRBModel& model,
+                     const std::vector<std::vector<std::vector<GRBVar>>>& y,
+                     const std::shared_ptr<const Instance>& pInst);
+
 } // init namespace
 
 #endif // INIT_IRP_MODE_HPP
