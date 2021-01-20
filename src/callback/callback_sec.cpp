@@ -216,6 +216,9 @@ void CallbackSEC::addLazyCVRPSEP()
                         }
                     }
                 }
+
+                CMGR_FreeMemCMgr(&myCutsCMP);
+                CMGR_FreeMemCMgr(&myOldCutsCMP);
             }
         }
     }
@@ -387,6 +390,9 @@ void CallbackSEC::addCutCVRPSEP()
                         }
                     }
                 }
+
+                CMGR_FreeMemCMgr(&myCutsCMP);
+                CMGR_FreeMemCMgr(&myOldCutsCMP);
             }
         }
     }
