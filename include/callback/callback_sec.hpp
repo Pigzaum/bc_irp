@@ -27,6 +27,8 @@ class CallbackSEC : public GRBCallback
 {
 public:
 
+    enum class constrsType {lazy, cut};
+
     CallbackSEC(const CallbackSEC& other) = default;
     CallbackSEC(CallbackSEC&& other) = default;
     ~CallbackSEC() = default;
@@ -36,24 +38,52 @@ public:
     CallbackSEC& operator=(CallbackSEC&& other) = delete;
 
     CallbackSEC(
+        const std::vector<std::vector<std::vector<GRBVar>>>& q,
         const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& x,
         const std::vector<std::vector<std::vector<GRBVar>>>& y,
-        const std::shared_ptr<const Instance>& p_inst);
+        const std::shared_ptr<const Instance>& pInst);
 
 private:
 
+    // quantities delivered to i by vehicle k at time t
+    const std::vector<std::vector<std::vector<GRBVar>>>& m_q;
     // equal to one if j immediately follows i in the route traveled at time t
     const std::vector<std::vector<std::vector<std::vector<GRBVar>>>>& m_x;
     // retailer i is served at time t
     const std::vector<std::vector<std::vector<GRBVar>>>& m_y;
 
-    std::shared_ptr<const Instance> mp_inst;
+    std::shared_ptr<const Instance> mpInst;
 
     void callback() override;
 
-    void addLazyCVRPSEP();
+    int addCVRPSEPCAP(const constrsType cstType);
 
-    void addCutCVRPSEP();
+    /**
+     * @brief Retrieve the q variables values from the relaxation solution at
+     * the current node.
+     * @param: constraint type.
+     * @return: q variables values at the current node.
+    */
+    std::vector<std::vector<std::vector<double>>> getqVarsValues(
+        const constrsType cstType);
+
+    /**
+     * @brief Retrieve the x variables values from the relaxation solution at
+     * the current node.
+     * @param: constraint type.
+     * @return: x variables values at the current node.
+    */
+    std::vector<std::vector<std::vector<std::vector<double>>>> getxVarsValues(
+        const constrsType cstType);
+
+    /**
+     * @brief Retrieve the y variables values from the relaxation solution at
+     * the current node.
+     * @param: constraint type.
+     * @return: y variables values at the current node.
+    */
+    std::vector<std::vector<std::vector<double>>> getyVarsValues(
+        const constrsType cstType);
 };
 
 #endif // CALLBACK_SEC_HPP

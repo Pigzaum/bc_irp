@@ -1,6 +1,6 @@
-# Inventory-routing problem (IRP) Branch-and-cut using CVRPSEP package
+# Inventory-routing problem (IRP) branch-and-cut algorithm using CVRPSEP package
 
-A C++ implementation of the IRP [[1](#references)] Branch-and-cut using Gurobi's API and CVRPSEP package [[2](#references)].
+A C++ implementation of an IRP [[1](#references)] branch-and-cut algorithm using Gurobi's API and CVRPSEP package [[2](#references)].
 
 ## Prerequisites
 

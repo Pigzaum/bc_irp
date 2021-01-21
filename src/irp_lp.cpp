@@ -116,7 +116,7 @@ Irp_lp::Irp_lp(const std::shared_ptr<const Instance>& pInst,
                const ConfigParameters::model& params) :
     mpInst(pInst),
     mModel(mEnv),
-    mCbSEC(m_x, m_y, pInst)
+    mCbSEC(m_q, m_x, m_y, pInst)
 {
     initModel(mModel, mI, m_q, m_x, m_y, mConstrs, mCbSEC, mpInst, params);
 }

@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.08)
 
 # set the project name and version
-project(irp_solver VERSION 0.5.1)
+project(bc_irp VERSION 0.5.1)
 
 option(CXX "enable C++ compilation" ON)
 
@@ -40,6 +40,7 @@ set(SOURCES
     src/instance.cpp
     src/irp_lp.cpp
     src/callback/callback_sec.cpp
+    src/callback/cuts/cvrpsep.cpp
     src/ext/loguru/loguru.cpp
     src/ext/cvrpsep/basegrph.cpp
     src/ext/cvrpsep/capsep.cpp
@@ -61,6 +62,7 @@ set(HEADERS
     include/instance.hpp
     include/irp_lp.hpp
     include/callback/callback_sec.hpp
+    include/utils/constants.hpp
     include/ext/loguru/loguru.hpp
     include/ext/cvrpsep/basegrph.h
     include/ext/cvrpsep/capsep.h
